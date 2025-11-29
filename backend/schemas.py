@@ -40,3 +40,14 @@ class StoryBlockResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+class SessionStartResponse(BaseModel):
+    session_id: int
+    block: StoryBlockResponse
+
+    class Config:
+        orm_mode = True
+
+
+class SessionContinueRequest(BaseModel):
+    choice: str

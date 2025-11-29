@@ -2,6 +2,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from datetime import datetime
 
 from .database import Base
 
@@ -34,4 +35,15 @@ class StoryBlock(Base):
     id = Column(Integer, primary_key=True, index=True)
     text = Column(String, nullable=False)
     options = Column(JSON, nullable=False)
+
+class StorySession(Base):
+    __tablename__ = "story_sessions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    current_block_id = Column(Integer, ForeignKey("story_blocks.id"), nullable=True)
+
+    # track entire history as a JSON list: ["1:A", "2:B", ...]
+    history = Column(JSON, default=[])
+
 
