@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>StoryTrain 🚂</title>
+  </head>
+  <body>
+    <h1>StoryTrain 🚂</h1>
+
+    <button id="start-btn">Start Story</button>
+
+    <div id="story-container" style="margin-top: 20px"></div>
+    <div id="options-container" style="margin-top: 10px"></div>
+
+    <script>
+      let currentSessionId = null;
+
+      async function startSession() {
+        const res = await fetch("http://127.0.0.1:8000/session/start", {
+          method: "POST",
+        });
+        const data = await res.json();
+
+        currentSessionId = data.session_id;
+        renderBlock(data.block);
+      }
+
+      async function continueSession(choiceIndex) {
+        if (!currentSessionId) return;
+
+        const res = await fetch(
+          `http://127.0.0.1:8000/session/${currentSessionId}/continue`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ choice: choiceIndex }),
+          }
+        );
+        const data = await res.json();
+        renderBlock(data);
+      }
+
+      function renderBlock(block) {
+        const storyDiv = document.getElementById("story-container");
+        const optionsDiv = document.getElementById("options-container");
+
+        storyDiv.innerText = block.text;
+        optionsDiv.innerHTML = "";
+
+        block.options.forEach((opt, idx) => {
+          const btn = document.createElement("button");
+          btn.innerText = opt;
+          btn.onclick = () => continueSession(idx);
+          optionsDiv.appendChild(btn);
+        });
+      }
+
+      document
+        .getElementById("start-btn")
+        .addEventListener("click", startSession);
+    </script>
+  </body>
+</html>
