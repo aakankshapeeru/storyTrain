@@ -1,0 +1,24 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
+
+# SQLite DB (if you want to ignore it)
+storytrain.db
+
+# Node
+node_modules/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
